@@ -20,13 +20,13 @@ create_user_library = 'CREATE TABLE IF NOT EXISTS user_library ' \
 
 # INSERTS
 
-insert_music_library = "INSERT INTO music_library(sessionId, itemInSession, artist, songTitle, songLength), " \
+insert_music_library = "INSERT INTO music_library(sessionId, itemInSession, artist, songTitle, songLength) " \
                        "VALUES(%s, %s, %s, %s, %s) "
 
-insert_artist_library = "INSERT INTO artist_library(artist, song_title, itemInSession, user_first_name, user_last_name, userId, sessionId), " \
+insert_artist_library = "INSERT INTO artist_library(artist, song_title, itemInSession, user_first_name, user_last_name, userId, sessionId) " \
                         "VALUES(%s, %s, %s, %s, %s, %s, %s)  "
 
-insert_user_library = "INSERT INTO user_library(userId, sessionId, user_first_name, user_last_name, song_title), " \
+insert_user_library = "INSERT INTO user_library(userId, sessionId, user_first_name, user_last_name, song_title) " \
                       "VALUES (%s, %s, %s, %s, %s) "
 
 # SELECTS
@@ -35,7 +35,7 @@ select_music_library = 'SELECT * from music_library WHERE sessionId = 338 AND it
 
 select_artist_library = 'SELECT * from artist_library WHERE userId = 10'
 
-select_user_library = "SELECT user_first_name, user_last_name FROM user_library WHERE song_title='You Gotta Be' AND userId = 8"
+select_user_library = "SELECT user_first_name, user_last_name FROM user_library WHERE song_title='You Gotta Be'"
 
 
 # DELETES
@@ -49,3 +49,4 @@ drop_user_library = 'DROP TABLE user_library'
 
 create_tables = (create_music_library, create_artist_library, create_user_library)
 drop_tables = (drop_music_library, drop_artist_library, drop_user_library)
+select_queries = (select_music_library, select_artist_library, select_user_library)
