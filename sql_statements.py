@@ -1,4 +1,4 @@
-create_keyspace = """
+create_keyspace_sparkifydb = """
     CREATE KEYSPACE IF NOT EXISTS sparkifydb 
     WITH REPLICATION = 
     { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }
@@ -38,5 +38,14 @@ select_artist_library = 'SELECT * from artist_library WHERE userId = 10'
 select_user_library = "SELECT user_first_name, user_last_name FROM user_library WHERE song_title='You Gotta Be' AND userId = 8"
 
 
+# DELETES
+
+drop_music_library = 'DROP TABLE music_library'
+
+drop_artist_library = 'DROP TABLE artist_library'
+
+drop_user_library = 'DROP TABLE user_library'
+
 
 create_tables = (create_music_library, create_artist_library, create_user_library)
+drop_tables = (drop_music_library, drop_artist_library, drop_user_library)
