@@ -35,7 +35,7 @@ select_music_library = 'SELECT artist, songtitle, songlength from music_library 
 
 select_artist_library = 'SELECT artist, songtitle, userFirstName, userLastName from artist_library WHERE userId = 10 AND sessionId = 182'
 
-select_user_library = "SELECT user_first_name, user_last_name FROM user_library WHERE song_title='You Gotta Be'"
+select_user_library = "SELECT user_first_name, user_last_name FROM user_library WHERE song_title='All Hands Against His Own'"
 
 
 # DELETES

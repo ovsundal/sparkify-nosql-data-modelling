@@ -16,9 +16,9 @@ def main():
         df = get_data_from_source()
 
         # perform inserts
-        insert_into_music_library(session, df)
-        insert_into_artist_library(session, df)
-        # insert_into_user_library(session, df)
+        # insert_into_music_library(session, df)
+        # insert_into_artist_library(session, df)
+        insert_into_user_library(session, df)
 
         # perform selects
         perform_select_queries(session)
@@ -87,14 +87,20 @@ def insert_into_artist_library(session, df):
 
 
 def insert_into_user_library(session, df):
-    data = df[['userId', 'sessionId', 'firstName', 'lastName', 'song']].values.tolist()
+    data = df[['userId', 'sessionId', 'firstName', 'lastName', 'song']]
+    data[['userId']] = data[['userId']].fillna(-1).astype(np.int)
+
+    cleaned_data = data.replace({pd.np.nan: None}).values.tolist()
     query = insert_user_library
 
     try:
-        for entry in data:
+        for entry in cleaned_data:
+            # since song is part of PK, it cannot be null - skip if so
+            if entry[4] == None:
+                continue
             session.execute(query, entry)
     except Exception as e:
-        print('Error inserting data into table artist_library:')
+        print('Error inserting data into table user_library:')
         print(e)
 
 
