@@ -12,12 +12,13 @@ def main():
     try:
         session, cluster = connect_to_database()
 
-        # get data
-        df = get_data_from_source()
+        # write data
+        create_csv_from_source()
+        df = pd.read_csv('./event_datafile_new.csv')
 
         # perform inserts
-        # insert_into_music_library(session, df)
-        # insert_into_artist_library(session, df)
+        insert_into_music_library(session, df)
+        insert_into_artist_library(session, df)
         insert_into_user_library(session, df)
 
         # perform selects
@@ -43,16 +44,15 @@ def connect_to_database():
         print(e)
 
 
-def get_data_from_source():
+def create_csv_from_source():
     """
-    Concatenates all csv files, loads  data into a dataframe and returns it
+    Concatenates all csv files, loads  data into a dataframe and writes to event_datafile_new.csv
     :return: dataframe containing all the rows
     """
     path = './event_data/'
     csv_files = glob.glob(path + "/*.csv")
     df = pd.concat((pd.read_csv(f) for f in csv_files))
-
-    return df
+    df.to_csv('./event_datafile_new.csv')
 
 
 def insert_into_music_library(session, df):
