@@ -1,5 +1,8 @@
+import glob
+
 from cassandra.cluster import Cluster
 import pandas as pd
+import numpy as np
 
 from sql_statements import insert_music_library, insert_artist_library, \
     insert_user_library, select_music_library, select_artist_library, select_queries
@@ -13,14 +16,11 @@ def main():
         df = get_data_from_source()
 
         # perform inserts
-        # insert_into_music_library(session, df)
-        # insert_into_artist_library(session, df)
+        insert_into_music_library(session, df)
+        insert_into_artist_library(session, df)
         # insert_into_user_library(session, df)
 
         # perform selects
-        # for query in select_queries:
-        #     session.execute(query)
-
         perform_select_queries(session)
 
     finally:
@@ -44,15 +44,27 @@ def connect_to_database():
 
 
 def get_data_from_source():
-    return pd.read_csv('event_datafile_new.csv')
+    """
+    Concatenates all csv files, loads  data into a dataframe and returns it
+    :return: dataframe containing all the rows
+    """
+    path = './event_data/'
+    csv_files = glob.glob(path + "/*.csv")
+    df = pd.concat((pd.read_csv(f) for f in csv_files))
+
+    return df
 
 
 def insert_into_music_library(session, df):
-    data = df[['sessionId', 'itemInSession', 'artist', 'song', 'length']].values.tolist()
+    data = df[['sessionId', 'itemInSession', 'artist', 'song', 'length']]
+
+    # replace empty string with None in decimal type column
+    cleaned_data = data.replace({pd.np.nan: None}).values.tolist()
+
     query = insert_music_library
 
     try:
-        for entry in data:
+        for entry in cleaned_data:
             session.execute(query, entry)
     except Exception as e:
         print('Error inserting data into table music_library:')
@@ -60,11 +72,14 @@ def insert_into_music_library(session, df):
 
 
 def insert_into_artist_library(session, df):
-    data = df[['artist', 'song', 'itemInSession', 'firstName', 'lastName', 'userId', 'sessionId']].values.tolist()
+    data = df[['artist', 'song', 'itemInSession', 'firstName', 'lastName', 'userId', 'sessionId']]
+    data[['userId']] = data[['userId']].fillna(-1).astype(np.int)
+
+    cleaned_data = data.replace({pd.np.nan: None}).values.tolist()
     query = insert_artist_library
 
     try:
-        for entry in data:
+        for entry in cleaned_data:
             session.execute(query, entry)
     except Exception as e:
         print('Error inserting data into table artist_library:')
